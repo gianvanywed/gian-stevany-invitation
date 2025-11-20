@@ -121,3 +121,51 @@ svg {
 .no-gap-bottom {
     margin-bottom: -0.75rem !important;
 }
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 16px 28px;
+    border-radius: 12px;
+    font-size: 18px;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.popup.show {
+    opacity: 1;
+}
+
+#wish-list {
+    max-height: 300px !important;
+    overflow-y: auto !important;
+  }
+
+.wish-item {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    background: #fff;
+}
+
+#wish-list::-webkit-scrollbar {
+    width: 8px;
+  }
+
+#wish-list::-webkit-scrollbar-track {
+background: #f1f1f1;
+border-radius: 10px;
+}
+
+#wish-list::-webkit-scrollbar-thumb {
+background: #c1c1c1;
+border-radius: 10px;
+}
