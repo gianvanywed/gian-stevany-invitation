@@ -418,6 +418,42 @@ export const comment = (() => {
         badge.classList.toggle('text-success', isPresent);
     };
 
+    const loadWishes = async () => {
+        const wishesURL = `${SUPABASE_URL}/guest_list?select=name,message&message_created_at=not.eq.0&order=message_created_at.desc`;
+
+        console.log
+      
+        const response = await fetch(wishesURL, {
+          method: "GET",
+          headers: {
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+            "Content-Type": "application/json"
+          }
+        });
+      
+        const data = await response.json();
+        console.log("Wishes:", data); // View supabase data
+      
+        renderWishes(data);
+    };
+    
+    const renderWishes = (list) => {
+        const container = document.getElementById("wish-list");
+        container.innerHTML = "";
+        
+        list.forEach(wish => {
+            const box = `
+            <div class="wish-item">
+                <h5 class="mb-1" style="font-size: 0.9rem; font-style: italic;">${wish.name}</h5>
+                <p class="mb-0" style="font-size: 1.05rem;">${wish.message}</p>
+            </div>
+            `;
+        
+            container.insertAdjacentHTML("beforeend", box);
+        });
+    };
+
     /**
      * @param {HTMLButtonElement} button 
      * @returns {Promise<void>}
@@ -518,9 +554,6 @@ export const comment = (() => {
         
         //     console.log(dto.postCommentRequest(1, presence, totalPax));
 
-        console.log("presence", presence.value)
-        console.log("totalPax", totalPax.value)
-
 
         const isPresent = presence.value === "1";
 
@@ -535,7 +568,8 @@ export const comment = (() => {
             body: JSON.stringify({
                 attendance: isPresent,       // example: true or false, or 1/0
                 coming_pax: totalPax.value,       // example: a number
-                message: message.value // example: a string message
+                message: message.value, // example: a string message
+                message_created_at: Math.floor(Date.now() / 1000)
             })
         });
 
@@ -550,6 +584,8 @@ export const comment = (() => {
     
             // Keep it disabled permanently
             button.disabled = true;
+
+            await loadWishes();
         } else {
             // If failed, re-enable the button
             button.disabled = false;

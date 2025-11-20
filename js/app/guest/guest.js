@@ -177,6 +177,40 @@ export const guest = (() => {
     }
   };
 
+  const loadWishes = async () => {
+    const wishesURL = `${SUPABASE_URL}/guest_list?select=name,message&message_created_at=not.eq.0&order=message_created_at.desc`;
+  
+    const response = await fetch(wishesURL, {
+      method: "GET",
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": "application/json"
+      }
+    });
+  
+    const data = await response.json();
+    console.log("Wishes:", data); // View supabase data
+  
+    renderWishes(data);
+  };
+
+  const renderWishes = (list) => {
+    const container = document.getElementById("wish-list");
+    container.innerHTML = "";
+    
+    list.forEach(wish => {
+        const box = `
+        <div class="wish-item">
+            <h5 class="mb-1" style="font-size: 0.9rem; font-style: italic;">${wish.name}</h5>
+            <p class="mb-0" style="font-size: 1.05rem;">${wish.message}</p>
+        </div>
+        `;
+    
+        container.insertAdjacentHTML("beforeend", box);
+    });
+};
+
   /**
    * @returns {Promise<void>}
    */
@@ -356,6 +390,9 @@ export const guest = (() => {
 
         // number of guests
         populatePaxOptions(result[0].pax);
+
+        // load wishes
+        loadWishes();
 
         button.disabled = true;
         document.body.scrollIntoView({ behavior: "instant" });
