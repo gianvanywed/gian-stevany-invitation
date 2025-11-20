@@ -11,13 +11,10 @@ export const audio = (() => {
      * @param {boolean} [playOnOpen=true]
      * @returns {Promise<void>}
      */
-    console.log("will start load async")
     const load = async (playOnOpen = true) => {
 
-        console.log("get data-audio")
         const url = document.body.getAttribute('data-audio');
         if (!url) {
-            console.log("no audio")
             progress.complete('audio', true);
             return;
         }
@@ -73,7 +70,6 @@ export const audio = (() => {
         };
 
         document.addEventListener('undangan.open', () => {
-            console.log("will play music now")
             music.classList.remove('d-none');
 
             if (playOnOpen) {

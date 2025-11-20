@@ -878,14 +878,13 @@
           <section class="my-0 pb-0 pt-3" id="comment">
             <div class="container">
               <div class="border rounded-5 shadow p-3 mb-2">
-                <p>
+                <p style="text-align: center;">
                   In order to share a personal and meaningful celebration, we
                   are inviting only those specifically named on the invitation
                 </p>
                 <h2
                   class="font-esthetic text-center mt-2 mb-4"
-                  style="font-size: 2.25rem"
-                >
+                  style="font-size: 2.25rem">
                   Presence
                 </h2>
 
@@ -909,15 +908,12 @@
 
                 <div class="mb-3">
                   <label for="form-presence" class="form-label my-1"
-                    ><i class="fa-solid fa-person-circle-question me-2"></i
-                    >Presensi</label
-                  >
+                    ><i class="fa-solid fa-person-circle-question me-2"></i>Presensi</label>
                   <select
                     class="form-select shadow-sm rounded-4"
                     id="form-presence"
                     autocomplete="off"
-                    data-offline-disabled="false"
-                  >
+                    data-offline-disabled="false">
                     <option value="0" selected>Konfirmasi Presensi</option>
                     <option value="1">Datang</option>
                     <option value="2">Berhalangan</option>
@@ -942,10 +938,8 @@
                 </div>
 
                 <div class="d-block mb-3" id="comment-form-default">
-
-                  <label for="form-comment" class="form-label my-1"
-                    ><i class="fa-solid fa-comment me-2"></i>Wishes</label
-                  >
+                  <label for="form-comment" class="form-label my-1">
+                  <i class="fa-solid fa-comment me-2"></i>Wishes</label>
                   <div class="position-relative">
                     <textarea
                       dir="auto"
@@ -972,6 +966,8 @@
                     <i class="fa-solid me-2"></i>Send
                   </button>
                 </div>
+
+                <div id="popup" class="popup">Response Recorded</div>
               </div>
 
               <!-- Comments -->
@@ -985,12 +981,29 @@
             </div>
           </section>
 
+          <section class="my-0 pb-0 pt-3" id="comment">
+            <div class="container">
+              <div class="border rounded-5 shadow p-3 mb-2">
+                <h2 class="font-esthetic text-center mt-2 mb-4" style="font-size: 2.25rem">
+                  All Wishes
+                </h2>
+
+                <!-- Wishes container -->
+                <div id="wish-list"></div>
+                
+                <div class="border rounded-4 shadow-sm p-3 mb-3">
+                  <h5 class="mb-1">Owen</h5>
+                  <p class="mb-0">Congratulations! Wish you all the best 🎉</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <!-- End Of Invitation -->
           <section class="py-2 no-gap-bottom">
             <div class="container text-center">
               <p class="pb-2 pt-4" style="font-size: 0.95rem">
-                We can’t wait to see you and celebrate surrounded by love and
-                joy!
+                We can’t wait to see you and celebrate surrounded by love and joy!
               </p>
 
             </div>

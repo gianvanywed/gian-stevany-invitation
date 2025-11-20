@@ -17,6 +17,9 @@ import { pool } from "../../connection/request.js";
 const API_URL =
   "https://script.google.com/macros/s/AKfycbxoGkZN0td_5UqgJjl1A_d-Od4RKfqEx6GOIqO7LD_psMdT068Wtczj_skswrtljJWuWA/exec";
 
+const SUPABASE_URL = "https://vafatgxsnanrtibqlfkn.supabase.co/rest/v1";
+const SUPABASE_ANON_KEY = "sb_publishable_oWYxT-_RPe6U19hyqVnhLA_5Q9s2FJy";
+
 export const guest = (() => {
   /**
    * @type {ReturnType<typeof storage>|null}
@@ -68,7 +71,6 @@ export const guest = (() => {
   const getGuestName = () => {
     const params = new URLSearchParams(window.location.search);
     // Assuming the guest name is passed via ?to=GuestName
-    console.log(params.get("to"));
     return params.get("to")
       ? decodeURIComponent(params.get("to")).trim()
       : "Unknown Guest";
@@ -78,9 +80,8 @@ export const guest = (() => {
   const getGuestUuid = () => {
     const params = new URLSearchParams(window.location.search);
     // Assuming the UUID is passed via &uuid=YOUR_TOKEN
-    console.log(params.get("authToken"));
-    return params.get("authToken")
-      ? decodeURIComponent(params.get("authToken")).trim()
+    return params.get("t")
+      ? decodeURIComponent(params.get("t")).trim()
       : null;
   };
 
@@ -243,18 +244,15 @@ export const guest = (() => {
   };
 
   const personalizeInvitationView = (invitationType) => {
-    console.log("INVITATION TYPE: ", invitationType);
     const receptionDiv = document.getElementById("reception-details");
     // If invitationType is '1' (HM Only), hide the reception section.
     // We treat null/empty/1 as HM Only.
-    if (receptionDiv && (invitationType === "1" || !invitationType)) {
+    if (receptionDiv && (invitationType === 1 || !invitationType)) {
       receptionDiv.style.display = "none";
-      console.log("Showing Holy Matrimony only.");
     } else {
       if (receptionDiv) {
         receptionDiv.style.display = "block";
       }
-      console.log("Showing both Holy Matrimony and Reception.");
     }
   };
 
@@ -285,7 +283,7 @@ export const guest = (() => {
       option.textContent = "0";
       selectElement.appendChild(option);
     }
-    console.log(`Dropdown populated with options 1 to ${validMaxPax || 1}.`);
+    // console.log(`Dropdown populated with options 1 to ${validMaxPax || 1}.`);
   };
 
   /**
@@ -303,31 +301,61 @@ export const guest = (() => {
       );
       button.disabled = true;
       button.textContent = "Please refresh the page";
-      console.warn("INVALID AUTH TOKEN: Missing parameters.");
+      console.warn("invalid auth");
       return;
     }
 
     // Show spinner, hide envelope
     showSpinner(button);
 
-    const getUrl = `${API_URL}?name=${encodeURIComponent(
-      guestName
-    )}&uuid=${encodeURIComponent(guestUuid)}`;
+    const getGuestUrl = `${SUPABASE_URL}/guest_list?name=eq.${encodeURIComponent(guestName)}&token=eq.${encodeURIComponent(guestUuid)}`;
 
     try {
-      const response = await fetch(getUrl);
+      const response = await fetch(getGuestUrl, {
+        headers: {
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+        }
+      });
+
       const result = await response.json();
 
       // 3. Check API result
-      if (response.ok && result.status === "success") {
+      if (response.ok) {
+        if (Array.isArray(result) && result.length > 0) {
+          const first = result[0];
+            if (first.name !== guestName && first.token !== guestUuid) {
+              console.log("1")
+              console.error("Network error during existence check:", error);
+              alert("A network error occurred. Please check your connection.");
+              displayError("A network error occurred. Please check your connection.");
+
+              // Restore envelope icon on network error
+              showEnvelope(button);
+              button.disabled = false;
+              button.textContent = "Open Invitation";
+            }
+        } else {
+          // TODO: show error message
+            console.log("2")
+            console.error("Network error during existence check:", error);
+            alert("A network error occurred. Please check your connection.");
+            displayError("A network error occurred. Please check your connection.");
+
+            // Restore envelope icon on network error
+            showEnvelope(button);
+            button.disabled = false;
+            button.textContent = "Open Invitation";
+        }
+
         console.warn("Verification Success:", result.message);
         // --- START: Original Success Logic ---
 
         // Resepsi only or Both
-        personalizeInvitationView(result.invitationType);
+        personalizeInvitationView(result[0].reception);
 
         // number of guests
-        populatePaxOptions(result.pax);
+        populatePaxOptions(result[0].pax);
 
         button.disabled = true;
         document.body.scrollIntoView({ behavior: "instant" });
@@ -340,64 +368,15 @@ export const guest = (() => {
         slide();
         theme.spyTop();
 
-        // confetti.basicAnimation();
-        // util.timeOut(confetti.openAnimation, 1500);
-
-        console.log("dispatch undangan.open event")
         document.dispatchEvent(new Event("undangan.open"));
         util
           .changeOpacity(document.getElementById("welcome"), false)
           .then((el) => el.remove());
-
-        // Re-enable the button *before* executing the rest of the logic if needed,
-        // or just rely on the upcoming scroll to hide the button/welcome screen.
-        // button.disabled = false;
-
-        // document.body.scrollIntoView({ behavior: "instant" });
-
-        // const rootElement = document.getElementById("root");
-        // if (rootElement) {
-        //     rootElement.classList.remove("opacity-0");
-        // }
-
-        // // Theme logic (assuming 'theme' is globally available)
-        // if (typeof theme !== 'undefined' && typeof theme.isAutoMode === 'function' && theme.isAutoMode()) {
-        //   const themeButton = document.getElementById("button-theme");
-        //   if (themeButton) {
-        //       themeButton.classList.remove("d-none");
-        //   }
-        // }
-
-        // // Other global functions (assuming slide, theme, and util objects exist)
-        // if (typeof slide === 'function') slide();
-        // if (typeof theme !== 'undefined' && typeof theme.spyTop === 'function') theme.spyTop();
-
-        // // Show the invitation and hide the entry screen (assuming your layout uses entry-screen)
-        // const entryScreen = document.getElementById('entry-screen');
-        // if (entryScreen) entryScreen.style.display = 'none';
-        // document.getElementById(INVITATION_CONTAINER_ID).style.display = 'block';
-
-        // // Personalize the welcome message
-        // const welcomeElement = document.getElementById('guest-welcome-name');
-        // if (welcomeElement) {
-        //     welcomeElement.textContent = guestName;
-        // }
-
-        // // Final dispatch and removal
-        // document.dispatchEvent(new Event("undangan.open"));
-        // const welcomeRemovalElement = document.getElementById('welcome');
-        // if (typeof util !== 'undefined' && typeof util.changeOpacity === 'function' && welcomeRemovalElement) {
-        //      util.changeOpacity(welcomeRemovalElement, false).then((el) => el.remove());
-        // } else if (welcomeRemovalElement) {
-        //      welcomeRemovalElement.remove();
-        // }
-        // --- END: Original Success Logic ---
       } else {
         // If API returns unauthorized or any other error
         const errorMessage =
           result.message || "Access Denied: Name or security token is invalid.";
         displayError(errorMessage);
-        console.warn("INVALID AUTH TOKEN:", errorMessage);
 
         // Restore envelope icon and keep button disabled
         showEnvelope(button);
@@ -549,14 +528,6 @@ export const guest = (() => {
       ?.addEventListener("click", () => window.open(url, "_blank"));
   };
 
-  const sendGoogleApiPost = () => {
-    console.warn("TESSTTTTT");
-    const button = document.getElementById("api-post-button");
-    if (button) {
-      button.textContent = "It Works!";
-    }
-  };
-
   /**
    * @returns {object}
    */
@@ -671,11 +642,9 @@ export const guest = (() => {
       session
         .guest(token) // TODO: modify this later so that we can get value only from k
         .then(({ data }) => {
-          console.log("in session");
           document.dispatchEvent(new Event("undangan.session"));
           progress.complete("config");
 
-          console.log("progress complete");
 
           if (img.hasDataSrc()) {
             img.load();
@@ -683,7 +652,6 @@ export const guest = (() => {
 
           vid.load();
           aud.load();
-          console.log("audio loaded");
           lib.load({ confetti: data.is_confetti_animation });
 
           //   comment
@@ -701,8 +669,6 @@ export const guest = (() => {
   const init = () => {
     theme.init();
     session.init();
-
-    window.sendGoogleApiPost = sendGoogleApiPost;
 
     if (session.isAdmin()) {
       storage("user").clear();

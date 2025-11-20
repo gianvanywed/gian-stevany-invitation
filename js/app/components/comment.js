@@ -7,7 +7,10 @@ import { dto } from '../../connection/dto.js';
 import { lang } from '../../common/language.js';
 import { storage } from '../../common/storage.js';
 import { session } from '../../common/session.js';
-import { request, HTTP_GET, HTTP_POST, HTTP_DELETE, HTTP_PUT, HTTP_STATUS_CREATED } from '../../connection/request.js';
+import { request, HTTP_GET, HTTP_POST, HTTP_DELETE, HTTP_PUT, HTTP_STATUS_CREATED, HTTP_PATCH } from '../../connection/request.js';
+
+const SUPABASE_URL = "https://vafatgxsnanrtibqlfkn.supabase.co/rest/v1";
+const SUPABASE_ANON_KEY = "sb_publishable_oWYxT-_RPe6U19hyqVnhLA_5Q9s2FJy";
 
 export const comment = (() => {
 
@@ -420,7 +423,7 @@ export const comment = (() => {
      * @returns {Promise<void>}
      */
     const send = async (button) => {
-        const id = button.getAttribute('data-uuid');
+        // const id = button.getAttribute('data-uuid');
 
         const name = document.getElementById('form-name');
         const nameValue = name.value;
@@ -428,154 +431,220 @@ export const comment = (() => {
         if (nameValue.length === 0) {
             util.notify('Name cannot be empty.').warning();
 
-            if (id) {
-                // scroll to form.
-                name.scrollIntoView({ block: 'center' });
-            }
+            // if (id) {
+            //     // scroll to form.
+            //     name.scrollIntoView({ block: 'center' });
+            // }
             return;
         }
 
+        // const presence = document.getElementById('form-presence');
+        // if (!id && presence && presence.value === '0') {
+        //     util.notify('Please select your attendance status.').warning();
+        //     return;
+        // }
+
         const presence = document.getElementById('form-presence');
-        if (!id && presence && presence.value === '0') {
+        if (presence && presence.value === '0') {
             util.notify('Please select your attendance status.').warning();
             return;
         }
 
-        const gifIsOpen = gif.isOpen(id ? id : gif.default);
-        const gifId = gif.getResultId(id ? id : gif.default);
-        const gifCancel = gif.buttonCancel(id);
-
-        if (gifIsOpen && !gifId) {
-            util.notify('Gif cannot be empty.').warning();
+        const totalPax = document.getElementById('form-total-pax');
+        if (totalPax && totalPax.value === '0' && presence.value !== "Berhalangan") {
+            util.notify('Please select the number of pax.').warning();
             return;
         }
 
-        if (gifIsOpen && gifId) {
-            gifCancel.hide();
-        }
+        const message = document.getElementById('form-comment');
 
-        const form = document.getElementById(`form-${id ? `inner-${id}` : 'comment'}`);
-        if (!gifIsOpen && form.value?.trim().length === 0) {
-            util.notify('Comments cannot be empty.').warning();
-            return;
-        }
+        // const gifIsOpen = gif.isOpen(id ? id : gif.default);
+        // const gifId = gif.getResultId(id ? id : gif.default);
+        // const gifCancel = gif.buttonCancel(id);
 
-        if (!id && name && !session.isAdmin()) {
-            name.disabled = true;
-        }
+        // if (gifIsOpen && !gifId) {
+        //     util.notify('Gif cannot be empty.').warning();
+        //     return;
+        // }
 
-        if (!session.isAdmin() && presence && presence.value !== '0') {
-            presence.disabled = true;
-        }
+        // if (gifIsOpen && gifId) {
+        //     gifCancel.hide();
+        // }
 
-        if (form) {
-            form.disabled = true;
-        }
+        // const form = document.getElementById(`form-${id ? `inner-${id}` : 'comment'}`);
+        // if (!gifIsOpen && form.value?.trim().length === 0) {
+        //     util.notify('Comments cannot be empty.').warning();
+        //     return;
+        // }
 
-        const cancel = document.querySelector(`[onclick="undangan.comment.cancel(this, '${id}')"]`);
-        if (cancel) {
-            cancel.disabled = true;
-        }
+        // if (!id && name && !session.isAdmin()) {
+        //     name.disabled = true;
+        // }
+
+        // if (!session.isAdmin() && presence && presence.value !== '0') {
+        //     presence.disabled = true;
+        // }
+
+        // if (form) {
+        //     form.disabled = true;
+        // }
+
+        // const cancel = document.querySelector(`[onclick="undangan.comment.cancel(this, '${id}')"]`);
+        // if (cancel) {
+        //     cancel.disabled = true;
+        // }
 
         const btn = util.disableButton(button);
-        const isPresence = presence ? presence.value === '1' : true;
+        // const isPresence = presence ? presence.value === '1' : true;
 
-        if (!session.isAdmin()) {
-            const info = storage('information');
-            info.set('name', nameValue);
+        // if (!session.isAdmin()) {
+        //     const info = storage('information');
+        //     info.set('name', nameValue);
 
-            if (!id) {
-                info.set('presence', isPresence);
-            }
+        //     if (!id) {
+        //         info.set('presence', isPresence);
+        //     }
+        // }
+
+        const updateUrl = `${SUPABASE_URL}/guest_list?id=eq.1`;
+
+        // const response = await request("PATCH", updateUrl)
+        //     .token(`${SUPABASE_ANON_KEY}`)
+        //     .header("Content-Type", "application/json")
+        //     .header("apikey", `${SUPABASE_ANON_KEY}`)
+        //     .header("Authorization", `Bearer ${SUPABASE_ANON_KEY}`)
+        //     .body(dto.postCommentRequest(1, presence, totalPax));
+        //     // .send(dto.getCommentResponse);
+        
+        //     console.log(dto.postCommentRequest(1, presence, totalPax));
+
+        console.log("presence", presence.value)
+        console.log("totalPax", totalPax.value)
+
+
+        const isPresent = presence.value === "1";
+
+        const response = await fetch(updateUrl, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "apikey": SUPABASE_ANON_KEY,
+                "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+                "Prefer": "return=representation" // optional: returns updated row
+            },
+            body: JSON.stringify({
+                attendance: isPresent,       // example: true or false, or 1/0
+                coming_pax: totalPax.value,       // example: a number
+                message: message.value // example: a string message
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Show popup
+            showPopup();
+    
+            // Update button text
+            button.innerText = "Submitted";
+    
+            // Keep it disabled permanently
+            button.disabled = true;
+        } else {
+            // If failed, re-enable the button
+            button.disabled = false;
+            button.innerText = "Send";
+    
+            console.error("Submit failed:", data);
         }
-
-        const response = await request(HTTP_POST, `/api/comment?lang=${lang.getLanguage()}`)
-            .token(session.getToken())
-            .body(dto.postCommentRequest(id, nameValue, isPresence, gifIsOpen ? null : form.value, gifId))
-            .send(dto.getCommentResponse);
 
         if (name) {
             name.disabled = false;
         }
 
-        if (form) {
-            form.disabled = false;
-        }
+        // if (form) {
+        //     form.disabled = false;
+        // }
 
-        if (cancel) {
-            cancel.disabled = false;
-        }
+        // if (cancel) {
+        //     cancel.disabled = false;
+        // }
 
         if (presence) {
             presence.disabled = false;
         }
 
-        if (gifIsOpen && gifId) {
-            gifCancel.show();
-        }
+        // if (gifIsOpen && gifId) {
+        //     gifCancel.show();
+        // }
 
-        btn.restore();
+        // btn.restore();
 
-        if (!response || response.code !== HTTP_STATUS_CREATED) {
-            return;
-        }
+        // owns.set(response.data.uuid, response.data.own);
 
-        owns.set(response.data.uuid, response.data.own);
+        // if (form) {
+        //     form.value = null;
+        // }
 
-        if (form) {
-            form.value = null;
-        }
+        // if (gifIsOpen && gifId) {
+        //     gifCancel.click();
+        // }
 
-        if (gifIsOpen && gifId) {
-            gifCancel.click();
-        }
+        // if (!id) {
+        //     if (pagination.reset()) {
+        //         await show();
+        //         comments.scrollIntoView();
+        //         return;
+        //     }
 
-        if (!id) {
-            if (pagination.reset()) {
-                await show();
-                comments.scrollIntoView();
-                return;
-            }
+        //     pagination.setTotal(pagination.geTotal() + 1);
+        //     if (comments.children.length === pagination.getPer()) {
+        //         comments.lastElementChild.remove();
+        //     }
 
-            pagination.setTotal(pagination.geTotal() + 1);
-            if (comments.children.length === pagination.getPer()) {
-                comments.lastElementChild.remove();
-            }
+        //     response.data.is_parent = true;
+        //     response.data.is_admin = session.isAdmin();
+        //     comments.insertAdjacentHTML('afterbegin', await card.renderContentMany([response.data]));
+        //     comments.scrollIntoView();
+        // }
 
-            response.data.is_parent = true;
-            response.data.is_admin = session.isAdmin();
-            comments.insertAdjacentHTML('afterbegin', await card.renderContentMany([response.data]));
-            comments.scrollIntoView();
-        }
+        // if (id) {
+        //     showHide.set('hidden', showHide.get('hidden').concat([dto.commentShowMore(response.data.uuid, true)]));
+        //     showHide.set('show', showHide.get('show').concat([id]));
 
-        if (id) {
-            showHide.set('hidden', showHide.get('hidden').concat([dto.commentShowMore(response.data.uuid, true)]));
-            showHide.set('show', showHide.get('show').concat([id]));
+        //     removeInnerForm(id);
 
-            removeInnerForm(id);
+        //     response.data.is_parent = false;
+        //     response.data.is_admin = session.isAdmin();
+        //     document.getElementById(`reply-content-${id}`).insertAdjacentHTML('beforeend', await card.renderContentSingle(response.data));
 
-            response.data.is_parent = false;
-            response.data.is_admin = session.isAdmin();
-            document.getElementById(`reply-content-${id}`).insertAdjacentHTML('beforeend', await card.renderContentSingle(response.data));
+        //     const anchorTag = document.getElementById(`button-${id}`).querySelector('a');
+        //     if (anchorTag) {
+        //         if (anchorTag.getAttribute('data-show') === 'false') {
+        //             showOrHide(anchorTag);
+        //         }
 
-            const anchorTag = document.getElementById(`button-${id}`).querySelector('a');
-            if (anchorTag) {
-                if (anchorTag.getAttribute('data-show') === 'false') {
-                    showOrHide(anchorTag);
-                }
+        //         anchorTag.remove();
+        //     }
 
-                anchorTag.remove();
-            }
+        //     const uuids = [response.data.uuid];
+        //     const readMoreElement = document.createRange().createContextualFragment(card.renderReadMore(id, anchorTag ? anchorTag.getAttribute('data-uuids').split(',').concat(uuids) : uuids));
 
-            const uuids = [response.data.uuid];
-            const readMoreElement = document.createRange().createContextualFragment(card.renderReadMore(id, anchorTag ? anchorTag.getAttribute('data-uuids').split(',').concat(uuids) : uuids));
+        //     const buttonLike = like.getButtonLike(id);
+        //     buttonLike.parentNode.insertBefore(readMoreElement, buttonLike);
+        // }
 
-            const buttonLike = like.getButtonLike(id);
-            buttonLike.parentNode.insertBefore(readMoreElement, buttonLike);
-        }
+        // like.addListener(response.data.uuid);
+        // lastRender.push(response.data.uuid);
+    };
 
-        like.addListener(response.data.uuid);
-        lastRender.push(response.data.uuid);
+    const showPopup = () => {
+        const popup = document.getElementById("popup");
+        popup.classList.add("show");
+      
+        setTimeout(() => {
+          popup.classList.remove("show");
+        }, 2000);
     };
 
     /**

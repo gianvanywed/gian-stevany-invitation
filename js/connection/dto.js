@@ -89,13 +89,12 @@ export const dto = (() => {
      * @param {string|null} gif_id
      * @returns {{id: string, name: string, presence: boolean, comment: string|null, gif_id: string|null}}
      */
-    const postCommentRequest = (id, name, presence, comment, gif_id) => {
+    const postCommentRequest = (id, presence, pax, comment) => {
         return {
             id,
-            name,
             presence,
+            pax,
             comment,
-            gif_id,
         };
     };
 
