@@ -542,7 +542,29 @@ export const comment = (() => {
         //     }
         // }
 
-        const updateUrl = `${SUPABASE_URL}/guest_list?id=eq.1`;
+        const getGuestUrl = `${SUPABASE_URL}/guest_list?name=eq.${encodeURIComponent(guestName)}&token=eq.${encodeURIComponent(guestUuid)}`;
+
+        const getResp = await fetch(getGuestUrl, {
+            headers: {
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+            }
+        });
+
+        const getRes = await response.json();
+
+        let updateUrl;
+        if (getRes.length > 0) {
+            const id = getRes[0].id;  // Extract the id from the first object
+            updateUrl = `${SUPABASE_URL}/guest_list?id=eq.${id}`;
+        
+            console.log(updateUrl);
+            // Now you can use updateUrl for your PATCH/PUT request
+        } else {
+            util.notify('Something went wrong. Please refresh the page').warning();
+            console.error("No data returned from get request");
+            return
+        }
 
         // const response = await request("PATCH", updateUrl)
         //     .token(`${SUPABASE_ANON_KEY}`)

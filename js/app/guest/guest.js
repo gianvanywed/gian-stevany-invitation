@@ -359,7 +359,6 @@ export const guest = (() => {
         if (Array.isArray(result) && result.length > 0) {
           const first = result[0];
             if (first.name !== guestName && first.token !== guestUuid) {
-              console.log("1")
               console.error("Network error during existence check:", error);
               alert("A network error occurred. Please check your connection.");
               displayError("A network error occurred. Please check your connection.");
@@ -371,7 +370,6 @@ export const guest = (() => {
             }
         } else {
           // TODO: show error message
-            console.log("2")
             console.error("Network error during existence check:", error);
             alert("A network error occurred. Please check your connection.");
             displayError("A network error occurred. Please check your connection.");
