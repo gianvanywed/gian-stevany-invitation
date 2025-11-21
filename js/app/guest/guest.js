@@ -418,16 +418,18 @@ export const guest = (() => {
         showEnvelope(button);
         button.disabled = true;
         button.textContent = "Access Denied or Please refresh the page";
+        return;
       }
     } catch (error) {
       console.error("Network error during existence check:", error);
-      alert("A network error occurred. Please check your connection.");
+      alert("Unauthorized Access");
       displayError("A network error occurred. Please check your connection.");
 
       // Restore envelope icon on network error
       showEnvelope(button);
       button.disabled = false;
       button.textContent = "Open Invitation";
+      return;
     }
 
     // const params = new URLSearchParams(window.location.search);
