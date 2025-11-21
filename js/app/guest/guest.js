@@ -371,13 +371,14 @@ export const guest = (() => {
         } else {
           // TODO: show error message
             console.error("Network error during existence check:", result);
-            alert("Something went wrong. Please check your connection.");
+            alert("Unauthorized Access");
             displayError("A network error occurred. Please check your connection.");
 
             // Restore envelope icon on network error
             showEnvelope(button);
             button.disabled = false;
             button.textContent = "Open Invitation";
+            return;
         }
 
         console.warn("Verification Success:", result.message);
