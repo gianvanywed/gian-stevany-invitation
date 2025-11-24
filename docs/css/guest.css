@@ -12,8 +12,25 @@ html {
 }
 
 .font-esthetic {
-    font-family: 'Great Vibes', cursive !important;
+    font-family: "Bonheur Royale", sans-serif !important;
+    color: var(--bs-heading-color);
 }
+
+.font-charm {
+    font-family: "Charm", sans-serif !important;
+    color: var(--bs-heading-color);
+}
+
+.font-yuji {
+    font-family: "Yuji Mai", sans-serif !important;
+    color: var(--bs-heading-color);
+}
+
+.font-redhat {
+    font-family: "Red Hat Text", sans-serif !important;
+    color: var(--bs-heading-color);
+}
+
 
 .font-arabic {
     font-family: 'Noto Naskh Arabic', serif !important;
@@ -136,6 +153,7 @@ svg {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.4s ease;
+    text-align: center; 
 }
 
 .popup.show {
@@ -148,12 +166,14 @@ svg {
   }
 
 .wish-item {
-    border: 1px solid #ddd;
+    border: 1px solid var(--bs-border-color);
     border-radius: 12px;
     padding: 12px 16px;
     margin-bottom: 12px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    background: #fff;
+    background: var(--bs-body-bg);    
+    color: var(--bs-body-color);  
+    font-family: "Charm", cursive; 
 }
 
 #wish-list::-webkit-scrollbar {

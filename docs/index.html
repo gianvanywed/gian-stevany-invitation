@@ -64,7 +64,7 @@
     <!-- Preload Resources -->
     <link
       rel="preload"
-      href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bonheur+Royale&family=Charm:wght@400;700&family=Yuji+Mai&family=Red+Hat+Text:wght@300;400;500;700&display=swap"
       as="style"
     />
     <link
@@ -92,7 +92,7 @@
     <!-- Font -->
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bonheur+Royale&family=Charm:wght@400;700&family=Yuji+Mai&family=Red+Hat+Text:wght@300;400;500;700&display=swap"
     />
 
     <!-- Dependencies CSS -->
@@ -171,7 +171,7 @@
                 class="img-center-crop rounded-circle border border-3 border-light shadow my-4 mx-auto cursor-pointer"
               />
 
-              <h2 class="font-esthetic my-4" style="font-size: 2.25rem">
+              <h2 class="font-esthetic my-4" style="font-size: 3.25rem">
                 Gian &amp; Stevany
               </h2>
               <p class="my-2" style="font-size: 1.25rem">
@@ -224,17 +224,20 @@
                     class="img-center-crop rounded-circle border border-3 border-light shadow my-4 mx-auto cursor-pointer"
                   />
                   <h2 class="font-esthetic m-0" style="font-size: 2.125rem">
-                    Gian Anderson Lukmana <br> 賴儀安
+                    Gian Anderson Lukmana <br>
+                    <span class="font-yuji">賴儀安</span>
                   </h2>
                   <p class="mt-3 mb-1" style="font-size: 0.95rem">
                     Second Son of
                   </p>
                   <p class="mb-0" style="font-size: 1.25rem">
-                    Mr. Riwanto Lukmana (賴聯興)
+                    Mr. Riwanto Lukmana
+                    <span class="font-yuji">(賴聯興)</span>
                   </p>
                   <p class="mb-0" style="font-size: 0.95rem">and</p>
                   <p class="mb-0" style="font-size: 1.25rem">
-                    Mrs. Lusy Wulandari The (鄭燕卿)
+                    Mrs. Lusy Wulandari The 
+                    <span class="font-yuji">(鄭燕卿)</span>
                   </p>
                 </div>
               </div>
@@ -253,17 +256,20 @@
                     class="img-center-crop rounded-circle border border-3 border-light shadow my-4 mx-auto cursor-pointer"
                   />
                   <h2 class="font-esthetic m-0" style="font-size: 2.125rem">
-                    Stevany <br> 李甜甜
+                    Stevany <br>
+                    <span class="font-yuji">李甜甜</span>
                   </h2>
                   <p class="mt-3 mb-1" style="font-size: 0.95rem">
                     Second Daughter of
                   </p>
                   <p class="mb-0" style="font-size: 1.25rem">
-                    Mr. Kartono (李和平)
+                    Mr. Kartono
+                    <span class="font-yuji">(李和平)</span>
                   </p>
                   <p class="mb-0" style="font-size: 0.95rem">and</p>
                   <p class="mb-0" style="font-size: 1.25rem">
-                    Mrs. Sia Pek Hui (佘碧惠)
+                    Mrs. Sia Pek Hui
+                    <span class="font-yuji">(佘碧惠)</span>
                   </p>
                 </div>
               </div>
@@ -536,13 +542,14 @@
                     data-aos="fade-right"
                     data-aos-duration="1500"
                   >
-                    <h2 class="font-esthetic m-0 py-2" style="font-size: 2rem">
+                    <h2 class="font-esthetic m-0 py-2" style="font-size: 2.5rem">
                       Holy Matrimony
                       <span
+                        class="font-redhat"
                         style="
                           display: block;
-                          font-size: 1rem;
-                          color: #E0E0E0;
+                          font-size: 1.5rem;
+                          color: var(--bs-secondary-color);
                           margin-top: 0.5rem;
                         "
                       >
@@ -567,13 +574,14 @@
                   </div>
 
                 <div class="py-2" data-aos="fade-left" data-aos-duration="1500">
-                  <h2 class="font-esthetic m-0 py-2" style="font-size: 2rem">
+                  <h2 class="font-esthetic m-0 py-2" style="font-size: 2.5rem">
                     Wedding Reception
                     <span
+                      class="font-redhat"
                       style="
                         display: block;
-                        font-size: 1rem;
-                        color: #E0E0E0;
+                        font-size: 1.5rem;
+                        color: var(--bs-secondary-color);
                         margin-top: 0.5rem;
                       "
                     >
@@ -1052,7 +1060,7 @@
             class="img-center-crop rounded-circle border border-3 border-light shadow mb-4 mx-auto"
           />
 
-          <div id="guest-name" data-message="Dear,"></div>
+          <div id="guest-name" data-message="Dear," style="font-size: 24px;"></div>
 
           <button
             type="button"
@@ -1064,6 +1072,8 @@
             Open Invitation
           </button>
         </div>
+
+        <div id="unauthorized-popup" class="popup">Unauthorized Access. <br> Please refresh the page.</div>
       </div>
     </div>
 
