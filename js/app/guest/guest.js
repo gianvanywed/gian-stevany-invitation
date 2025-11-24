@@ -161,7 +161,7 @@ export const guest = (() => {
 
       const template = `<small class="mt-0 mb-1 mx-0 p-0">${util.escapeHtml(
         guestName?.getAttribute("data-message")
-      )}</small><p class="m-0 p-0" style="font-size: 1.25rem; font-family: 'Josefin Sans';">${util.escapeHtml(
+      )}</small><p class="m-0 p-0" style="font-size: 1.25rem; font-family: 'Charm';">${util.escapeHtml(
         name
       )}</p>`;
       util.safeInnerHTML(div, template);
@@ -175,6 +175,15 @@ export const guest = (() => {
     if (form) {
       form.value = information.get("name") ?? name;
     }
+  };
+
+  const showUnauthorizedPopup = () => {
+    const popup = document.getElementById("unauthorized-popup");
+    popup.classList.add("show");
+  
+    setTimeout(() => {
+      popup.classList.remove("show");
+    }, 2000);
   };
 
   const loadWishes = async () => {
@@ -202,14 +211,14 @@ export const guest = (() => {
     list.forEach(wish => {
         const box = `
         <div class="wish-item">
-            <h5 class="mb-1" style="font-size: 0.9rem; font-style: italic;">${wish.name}</h5>
+            <h5 class="mb-1 text-body" style="font-size: 0.9rem; font-style: italic;">${wish.name}</h5>
             <p class="mb-0" style="font-size: 1.05rem;">${wish.message}</p>
         </div>
         `;
     
         container.insertAdjacentHTML("beforeend", box);
     });
-};
+  };
 
   /**
    * @returns {Promise<void>}
@@ -359,9 +368,11 @@ export const guest = (() => {
         if (Array.isArray(result) && result.length > 0) {
           const first = result[0];
             if (first.name !== guestName && first.token !== guestUuid) {
-              console.error("Network error during existence check:", error);
-              alert("A network error occurred. Please check your connection.");
-              displayError("A network error occurred. Please check your connection.");
+              // console.error("Network error during existence check:", error);
+              // alert("A network error occurred. Please check your connection.");
+              // displayError("A network error occurred. Please check your connection.");
+
+              showUnauthorizedPopup();
 
               // Restore envelope icon on network error
               showEnvelope(button);
@@ -370,9 +381,11 @@ export const guest = (() => {
             }
         } else {
           // TODO: show error message
-            console.error("Network error during existence check:", result);
-            alert("Unauthorized Access");
-            displayError("A network error occurred. Please check your connection.");
+            // console.error("Network error during existence check:", result);
+            // alert("Unauthorized Access");
+            // displayError("A network error occurred. Please check your connection.");
+
+            showUnauthorizedPopup();
 
             // Restore envelope icon on network error
             showEnvelope(button);
@@ -422,8 +435,10 @@ export const guest = (() => {
       }
     } catch (error) {
       console.error("Network error during existence check:", error);
-      alert("Unauthorized Access");
-      displayError("A network error occurred. Please check your connection.");
+      // alert("Unauthorized Access");
+      // displayError("A network error occurred. Please check your connection.");
+
+      showUnauthorizedPopup();
 
       // Restore envelope icon on network error
       showEnvelope(button);

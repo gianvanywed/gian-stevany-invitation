@@ -555,6 +555,11 @@ export const comment = (() => {
 
         let updateUrl;
         if (getRes.length > 0) {
+            if (getRes[0].name !== nameValue) {
+                showUnauthorizedPopup();
+                return
+            }
+
             const id = getRes[0].id;  // Extract the id from the first object
             updateUrl = `${SUPABASE_URL}/guest_list?id=eq.${id}`;
         
@@ -698,6 +703,15 @@ export const comment = (() => {
 
     const showPopup = () => {
         const popup = document.getElementById("popup");
+        popup.classList.add("show");
+      
+        setTimeout(() => {
+          popup.classList.remove("show");
+        }, 2000);
+    };
+
+    const showUnauthorizedPopup = () => {
+        const popup = document.getElementById("unauthorized-popup");
         popup.classList.add("show");
       
         setTimeout(() => {
