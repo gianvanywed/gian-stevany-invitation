@@ -154,7 +154,7 @@ export const video = (() => {
         observer.observe(vid);
         vid.style.removeProperty("height");
         wrap.style.removeProperty("height");
-        document.getElementById("video-love-stroy-loading")?.remove();
+        document.getElementById("video-love-story-loading")?.remove();
       });
   };
 

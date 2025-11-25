@@ -189,3 +189,19 @@ border-radius: 10px;
 background: #c1c1c1;
 border-radius: 10px;
 }
+
+.bg-fixed-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  
+    background-image: url("https://gianvanywed.github.io/invitation/assets/images/Welcome.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: -1;
+}
