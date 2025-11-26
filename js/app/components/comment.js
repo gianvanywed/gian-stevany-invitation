@@ -458,17 +458,17 @@ export const comment = (() => {
         const params = new URLSearchParams(window.location.search);
         // Assuming the guest name is passed via ?to=GuestName
         return params.get("to")
-          ? decodeURIComponent(params.get("to")).trim()
-          : "Unknown Guest";
-      };
-    
+            ? decodeURIComponent(params.get("to")).trim()
+            : "Unknown Guest";
+    };
+
     // Function to safely extract the UUID/token from the URL query parameter 'uuid'
     const getGuestUuid = () => {
-    const params = new URLSearchParams(window.location.search);
-    // Assuming the UUID is passed via &uuid=YOUR_TOKEN
-    return params.get("t")
-        ? decodeURIComponent(params.get("t")).trim()
-        : null;
+        const params = new URLSearchParams(window.location.search);
+        // Assuming the UUID is passed via &uuid=YOUR_TOKEN
+        return params.get("t")
+            ? decodeURIComponent(params.get("t")).trim()
+            : null;
     };
 
     /**
@@ -568,7 +568,7 @@ export const comment = (() => {
             }
         });
 
-        const getRes = await response.json();
+        const getRes = await getResp.json();
 
         let updateUrl;
         if (getRes.length > 0) {
