@@ -454,6 +454,23 @@ export const comment = (() => {
         });
     };
 
+    const getGuestName = () => {
+        const params = new URLSearchParams(window.location.search);
+        // Assuming the guest name is passed via ?to=GuestName
+        return params.get("to")
+          ? decodeURIComponent(params.get("to")).trim()
+          : "Unknown Guest";
+      };
+    
+    // Function to safely extract the UUID/token from the URL query parameter 'uuid'
+    const getGuestUuid = () => {
+    const params = new URLSearchParams(window.location.search);
+    // Assuming the UUID is passed via &uuid=YOUR_TOKEN
+    return params.get("t")
+        ? decodeURIComponent(params.get("t")).trim()
+        : null;
+    };
+
     /**
      * @param {HTMLButtonElement} button 
      * @returns {Promise<void>}
@@ -542,25 +559,7 @@ export const comment = (() => {
         //     }
         // }
 
-        const getGuestName = () => {
-            const params = new URLSearchParams(window.location.search);
-            // Assuming the guest name is passed via ?to=GuestName
-            return params.get("to")
-              ? decodeURIComponent(params.get("to")).trim()
-              : "Unknown Guest";
-          };
-        
-        // Function to safely extract the UUID/token from the URL query parameter 'uuid'
-        const getGuestUuid = () => {
-        const params = new URLSearchParams(window.location.search);
-        // Assuming the UUID is passed via &uuid=YOUR_TOKEN
-        return params.get("t")
-            ? decodeURIComponent(params.get("t")).trim()
-            : null;
-        };
-        
-
-        const getGuestUrl = `${SUPABASE_URL}/guest_list?name=eq.${encodeURIComponent(getGuestName)}&token=eq.${encodeURIComponent(getGuestUuid)}`;
+        const getGuestUrl = `${SUPABASE_URL}/guest_list?name=eq.${encodeURIComponent(getGuestName())}&token=eq.${encodeURIComponent(getGuestUuid())}`;
 
         const getResp = await fetch(getGuestUrl, {
             headers: {
