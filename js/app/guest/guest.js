@@ -351,6 +351,9 @@ export const guest = (() => {
     // Show spinner, hide envelope
     showSpinner(button);
 
+    // sleep 1 second to let music load
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
     const getGuestUrl = `${SUPABASE_URL}/guest_list?name=eq.${encodeURIComponent(guestName)}&token=eq.${encodeURIComponent(guestUuid)}`;
 
     try {
